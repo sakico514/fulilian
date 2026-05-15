@@ -31,11 +31,12 @@ def _try_start(*commands: str) -> bool:
 # Map friendly names to launch commands (tried in order)
 APP_COMMANDS: dict[str, list[str]] = {
     "qq音乐": [
+        'start "" "D:\\software\\QQ音乐\\QQMusic\\QQMusic.exe"',
         'start "" qqmusic://',
         'start "" "QQMusic.exe"',
-        'start "" QQMusic',
     ],
     "qqmusic": [
+        'start "" "D:\\software\\QQ音乐\\QQMusic\\QQMusic.exe"',
         'start "" qqmusic://',
         'start "" "QQMusic.exe"',
     ],

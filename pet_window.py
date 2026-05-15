@@ -217,11 +217,37 @@ class PetWindow(QWidget):
                 "（无法连接 AI）", self.pos(), self.size(), duration_ms=2000
             )
             return
+
+        # Keyword-based action detection (fallback for AI tag)
+        pre_action = self._detect_action(text)
+        if pre_action:
+            self.speech_bubble.show_text(pre_action, self.pos(), self.size(), duration_ms=4000)
+
         ctx = self._get_context()
         prompt = f"{text}\n（桌面状态：{ctx}）"
         self._waiting_for_reply = True
         self.speech_bubble.show_text("...", self.pos(), self.size(), duration_ms=0)
         self.ai_engine.send_message_async(prompt, self._on_ai_reply)
+
+    def _detect_action(self, text: str) -> str | None:
+        """Keyword-based action detection as fallback."""
+        t = text.strip().lower()
+        if any(kw in t for kw in ("放音乐", "听歌", "听音乐", "qq音乐", "打开qq音乐")):
+            err = app_actions.open_app("QQ音乐")
+            return f"好的，帮你打开QQ音乐~" if not err else err
+        if any(kw in t for kw in ("网易云", "打开网易云")):
+            err = app_actions.open_app("网易云音乐")
+            return f"好的，帮你打开网易云~" if not err else err
+        if any(kw in t for kw in ("记事本", "打开记事本")):
+            err = app_actions.open_app("记事本")
+            return f"好的~" if not err else err
+        if any(kw in t for kw in ("计算器", "打开计算器")):
+            err = app_actions.open_app("计算器")
+            return f"好的~" if not err else err
+        if any(kw in t for kw in ("浏览器", "打开浏览器")):
+            err = app_actions.open_app("浏览器")
+            return f"好的~" if not err else err
+        return None
 
     def _execute_action(self, reply: str) -> str:
         """Extract and execute [ACTION:type:param] from reply. Returns cleaned text."""
@@ -258,4 +284,7 @@ class PetWindow(QWidget):
     def _quit(self) -> None:
         from PyQt6.QtWidgets import QApplication
 
+        self.behavior.stop_auto_behavior()
+        self.speech_bubble.close()
+        self.chat_input.close()
         QApplication.quit()
