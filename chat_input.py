@@ -56,6 +56,9 @@ class ChatInput(QWidget):
         self.show()
         self.input.setFocus()
 
+    def focusOutEvent(self, event) -> None:
+        self.hide()
+
     def paintEvent(self, event) -> None:
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)

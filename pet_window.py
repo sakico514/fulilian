@@ -159,7 +159,7 @@ class PetWindow(QWidget):
 
     def _on_click(self) -> None:
         self.behavior.react_to_click()
-        self.chat_input.show_at(self.pos(), self.size())
+        self.chat_input.hide()
 
     def _on_double_click(self) -> None:
         self.behavior.react_to_double_click()
